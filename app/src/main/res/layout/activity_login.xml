@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/loginRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:padding="32dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SQLiteApp"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tituloLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="24dp"
+            android:text="Iniciar sesión"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/txtNick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="56dp"
+            android:hint="Nick"
+            android:inputType="text"
+            android:autofillHints="username"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/txtClave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="56dp"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:autofillHints="password"
+            android:saveEnabled="false"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/txtConfirmar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="56dp"
+            android:hint="Confirmar contraseña"
+            android:inputType="textPassword"
+            android:importantForAutofill="no"
+            android:saveEnabled="false"
+            android:singleLine="true"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnIngresar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:layout_marginTop="24dp"
+            android:text="Ingresar" />
+
+        <Button
+            android:id="@+id/btnCambiarModo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Crear una cuenta" />
+    </LinearLayout>
+</ScrollView>

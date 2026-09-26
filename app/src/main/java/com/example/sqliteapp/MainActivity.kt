@@ -1,6 +1,7 @@
 package com.example.sqliteapp
 
 import android.os.Bundle
+import android.content.Intent
 import android.database.sqlite.SQLiteException
 import android.view.View
 import android.widget.ArrayAdapter
@@ -34,6 +35,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (!Sesion.autenticada) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
