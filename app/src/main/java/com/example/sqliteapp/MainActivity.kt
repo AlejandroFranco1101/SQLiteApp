@@ -1,6 +1,7 @@
 package com.example.sqliteapp
 
 import android.os.Bundle
+import android.database.sqlite.SQLiteException
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -77,6 +78,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View) {
+        try {
+            procesarOperacion(view)
+        } catch (error: SQLiteException) {
+            Toast.makeText(this, "No se pudo completar la operacion en la base de datos", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun procesarOperacion(view: View) {
         val operacion = when (view.id) {
             R.id.btnAgregar -> "insertar"
             R.id.btnActualizar -> "actualizar"
@@ -93,8 +102,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         if (operacion == "eliminar") {
-            managerProductos.deleteProducto(txtId.text.toString().trim().toInt())
-            Toast.makeText(this, "Producto eliminado", Toast.LENGTH_LONG).show()
+            val filas = managerProductos.deleteProducto(txtId.text.toString().trim().toInt())
+            if (filas > 0) {
+                txtId.text.clear()
+                txtIdDB.text = ""
+                txtNombre.text.clear()
+                txtPrecio.text.clear()
+                txtCantidad.text.clear()
+                cmbCategorias.setSelection(if (cmbCategorias.count > 0) 0 else -1)
+                Toast.makeText(this, "Producto eliminado", Toast.LENGTH_LONG).show()
+            } else {
+                mostrarProductoInexistente()
+            }
             return
         }
 
@@ -113,9 +132,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             Toast.makeText(this, "Producto agregado", Toast.LENGTH_LONG).show()
         } else {
             val idproducto = txtId.text.toString().trim().toInt()
-            managerProductos.updateProducto(idproducto, idcategoria, nombre, precio, cantidad)
-            Toast.makeText(this, "Producto actualizado", Toast.LENGTH_LONG).show()
+            val filas = managerProductos.updateProducto(idproducto, idcategoria, nombre, precio, cantidad)
+            if (filas > 0) {
+                txtIdDB.text = idproducto.toString()
+                Toast.makeText(this, "Producto actualizado", Toast.LENGTH_LONG).show()
+            } else {
+                mostrarProductoInexistente()
+            }
         }
+    }
+
+    private fun mostrarProductoInexistente() {
+        txtIdDB.text = ""
+        txtId.error = "No existe un producto con este codigo"
+        txtId.requestFocus()
+        Toast.makeText(this, "Producto no encontrado", Toast.LENGTH_LONG).show()
     }
 
     private fun buscarProducto(id: Int) {

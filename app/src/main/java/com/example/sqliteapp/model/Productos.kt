@@ -58,8 +58,8 @@ class Productos(context: Context?) {
     }
 
     // Eliminar un registro por su ID.
-    fun deleteProducto(id: Int) {
-        db.delete(TABLE_NAME_PRODUCTOS, "$COL_ID=?", arrayOf(id.toString()))
+    fun deleteProducto(id: Int): Int {
+        return db.delete(TABLE_NAME_PRODUCTOS, "$COL_ID=?", arrayOf(id.toString()))
     }
 
     // Modificar un registro por su ID.
@@ -69,8 +69,8 @@ class Productos(context: Context?) {
         descripcion: String?,
         precio: Double?,
         cantidad: Int?
-    ) {
-        db.update(
+    ): Int {
+        return db.update(
             TABLE_NAME_PRODUCTOS,
             generarContentValues(idcategoria, descripcion, precio, cantidad),
             "$COL_ID=?", arrayOf(id.toString())
