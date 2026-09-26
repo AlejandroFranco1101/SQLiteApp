@@ -81,14 +81,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.btnAgregar -> "insertar"
             R.id.btnActualizar -> "actualizar"
             R.id.btnEliminar -> "eliminar"
-            R.id.btnBuscar -> {
-                // IMPLEMENTE LA BUSQUEDA: actividad de la discusion de resultados.
-                return
-            }
+            R.id.btnBuscar -> "buscar"
             else -> return
         }
 
         if (!vericarFormulario(operacion)) return
+
+        if (operacion == "buscar") {
+            buscarProducto(txtId.text.toString().trim().toInt())
+            return
+        }
 
         if (operacion == "eliminar") {
             managerProductos.deleteProducto(txtId.text.toString().trim().toInt())
@@ -113,6 +115,35 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             val idproducto = txtId.text.toString().trim().toInt()
             managerProductos.updateProducto(idproducto, idcategoria, nombre, precio, cantidad)
             Toast.makeText(this, "Producto actualizado", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun buscarProducto(id: Int) {
+        managerProductos.searchProducto(id).use { cursor ->
+            if (!cursor.moveToFirst()) {
+                txtIdDB.text = ""
+                txtNombre.text.clear()
+                txtPrecio.text.clear()
+                txtCantidad.text.clear()
+                cmbCategorias.setSelection(-1)
+                txtId.error = "No existe un producto con este codigo"
+                Toast.makeText(this, "Producto no encontrado", Toast.LENGTH_LONG).show()
+                return
+            }
+
+            txtIdDB.text = cursor.getInt(cursor.getColumnIndexOrThrow(Productos.COL_ID)).toString()
+            txtNombre.setText(cursor.getString(cursor.getColumnIndexOrThrow(Productos.COL_DESCRIPCION)))
+            txtPrecio.setText(cursor.getDouble(cursor.getColumnIndexOrThrow(Productos.COL_PRECIO)).toString())
+            val cantidadIndex = cursor.getColumnIndexOrThrow(Productos.COL_CANTIDAD)
+            txtCantidad.setText(if (cursor.isNull(cantidadIndex)) "" else cursor.getInt(cantidadIndex).toString())
+
+            val idcategoria = cursor.getInt(cursor.getColumnIndexOrThrow(Productos.COL_IDCATEGORIA))
+            val categoria = managerCategoria.searchNombre(idcategoria)
+            val posicion = (0 until cmbCategorias.count).firstOrNull {
+                cmbCategorias.getItemAtPosition(it).toString() == categoria
+            }
+            cmbCategorias.setSelection(posicion ?: -1)
+            Toast.makeText(this, "Producto encontrado", Toast.LENGTH_LONG).show()
         }
     }
 
